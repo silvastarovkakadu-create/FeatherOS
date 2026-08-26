@@ -94,8 +94,9 @@ open-vm-tools-desktop
 # Utilities
 plymouth
 plymouth-themes
-grub-pc
-grub-efi-amd64
+grub-pc-bin
+grub-efi-amd64-bin
+grub2-common
 os-prober
 ntfs-3g
 exfatprogs
