@@ -1,0 +1,5 @@
+[kwin]
+Overview=Meta,Meta,Toggle Overview
+Switch One Desktop to the Left=Ctrl+Meta+Left,Ctrl+Meta+Left,Switch One Desktop to the Left
+Switch One Desktop to the Right=Ctrl+Meta+Right,Ctrl+Meta+Right,Switch One Desktop to the Right
+Show Desktop=Meta+D,Meta+D,Peek at Desktop

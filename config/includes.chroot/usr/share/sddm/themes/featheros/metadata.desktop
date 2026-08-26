@@ -1,0 +1,14 @@
+[SddmGreeterTheme]
+Name=FeatherOS
+Description=FeatherOS glass login screen
+Author=FeatherOS Project
+Copyright=(c) 2026 FeatherOS Project
+License=GPL-3.0-or-later
+Type=sddm-theme
+Version=1.0
+Screenshot=screenshot.png
+MainScript=Main.qml
+ConfigFile=theme.conf
+TranslationsDirectory=translations
+Theme-Id=featheros
+Theme-API=2.0

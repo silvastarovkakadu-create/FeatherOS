@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=FeatherOS First Login
+Exec=/usr/local/lib/featheros/first-login
+OnlyShowIn=KDE;
+NoDisplay=true
+X-KDE-autostart-phase=1

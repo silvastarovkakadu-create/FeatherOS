@@ -1,0 +1,12 @@
+[Background]
+Color=10,13,22
+[BackgroundFaint]
+Color=10,13,22
+[Foreground]
+Color=232,236,248
+[General]
+Blur=true
+ColorRandomization=false
+Description=Feather
+Opacity=0.84
+Wallpaper=

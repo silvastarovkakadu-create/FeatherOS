@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+lb config noauto \
+  --mode debian \
+  --distribution trixie \
+  --architectures amd64 \
+  --binary-images iso-hybrid \
+  --archive-areas "main contrib non-free non-free-firmware" \
+  --parent-archive-areas "main contrib non-free non-free-firmware" \
+  --bootloaders "syslinux grub-efi" \
+  --debian-installer none \
+  --debian-installer-gui false \
+  --firmware-binary true \
+  --firmware-chroot true \
+  --linux-flavours amd64 \
+  --chroot-squashfs-compression-type xz \
+  --apt-recommends true \
+  --memtest none \
+  --iso-application "FeatherOS Live" \
+  --iso-publisher "FeatherOS Project" \
+  --iso-volume "FeatherOS_1_0" \
+  --image-name featheros \
+  --checksums sha256 \
+  --bootappend-live "boot=live components quiet splash username=feather hostname=featheros locales=en_US.UTF-8 keyboard-layouts=us"
+

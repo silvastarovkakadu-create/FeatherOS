@@ -1,0 +1,69 @@
+name: Build FeatherOS ISO
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: featheros-iso-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Debian 13 live-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 330
+    container:
+      image: debian:13
+      options: --privileged
+
+    steps:
+      - name: Prepare checkout tools
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates git
+
+      - name: Check out FeatherOS
+        uses: actions/checkout@v4
+
+      - name: Install ISO build dependencies
+        run: |
+          printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d
+          chmod +x /usr/sbin/policy-rc.d
+          DEBIAN_FRONTEND=noninteractive ./scripts/install-build-deps.sh
+
+      - name: Validate source tree
+        run: ./scripts/validate.sh
+
+      - name: Build bootable ISO
+        run: ./build.sh
+
+      - name: Verify ISO structure
+        run: |
+          test -s dist/FeatherOS-1.0-x86_64.iso
+          sha256sum --check dist/FeatherOS-1.0-x86_64.iso.sha256
+          xorriso -indev dist/FeatherOS-1.0-x86_64.iso -report_el_torito as_mkisofs
+
+      - name: Upload FeatherOS ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeatherOS-1.0-x86_64
+          path: |
+            dist/FeatherOS-1.0-x86_64.iso
+            dist/FeatherOS-1.0-x86_64.iso.sha256
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FeatherOS-build-log
+          path: dist/build.log
+          if-no-files-found: ignore
+          retention-days: 7

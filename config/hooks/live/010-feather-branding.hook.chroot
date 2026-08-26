@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+install -d /usr/share/wallpapers/FeatherOS /usr/share/backgrounds/featheros
+cp -a /usr/share/featheros/wallpapers/. /usr/share/wallpapers/FeatherOS/
+ln -sf /usr/share/wallpapers/FeatherOS/Feather-Dark.svg /usr/share/backgrounds/featheros/default.svg
+update-alternatives --install /usr/share/desktop-base/active-theme/wallpaper/contents/images/1920x1080.svg desktop-background /usr/share/wallpapers/FeatherOS/Feather-Dark.svg 100 || true
+plymouth-set-default-theme featheros || true
+update-initramfs -u
+sed -i 's/^Name=.*/Name=Files/' /usr/share/applications/org.kde.dolphin.desktop
+sed -i 's/^Name=.*/Name=Terminal/' /usr/share/applications/org.kde.konsole.desktop
+sed -i 's/^Name=.*/Name=Advanced Settings/' /usr/share/applications/systemsettings.desktop
+sed -i 's/^Name=.*/Name=Install FeatherOS/' /usr/share/applications/calamares.desktop
+sed -i 's/^branding:.*/branding: featheros/' /etc/calamares/settings.conf
+update-icon-caches /usr/share/icons/hicolor || true

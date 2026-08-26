@@ -1,0 +1,14 @@
+#!/bin/sh
+set -eu
+marker="${XDG_CONFIG_HOME:-$HOME/.config}/featheros/initialized-1.0"
+test -e "$marker" && exit 0
+mkdir -p "$(dirname "$marker")"
+plasma-apply-lookandfeel -a org.featheros.desktop || true
+kwriteconfig6 --file kwinrc --group Desktops --key Number 4
+kwriteconfig6 --file kwinrc --group Plugins --key blurEnabled true
+kwriteconfig6 --file kwinrc --group Plugins --key overviewEnabled true
+kwriteconfig6 --file kdeglobals --group General --key ColorScheme FeatherDark
+kwriteconfig6 --file kdeglobals --group General --key AccentColor "112,132,255"
+mkdir -p "$HOME/.local/share/flatpak/repo" || true
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
+touch "$marker"

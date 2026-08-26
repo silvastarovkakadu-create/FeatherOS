@@ -1,0 +1,30 @@
+var desks = desktopsForActivity(currentActivity());
+for (var i = 0; i < desks.length; i++) {
+    desks[i].wallpaperPlugin = "org.kde.image";
+    desks[i].currentConfigGroup = ["Wallpaper", "org.kde.image", "General"];
+    desks[i].writeConfig("Image", "file:///usr/share/wallpapers/FeatherOS/Feather-Dark.svg");
+    desks[i].writeConfig("FillMode", 2);
+}
+var top = new Panel;
+top.location = "top";
+top.height = 34;
+top.floating = true;
+top.alignment = "center";
+top.lengthMode = "fit";
+top.addWidget("org.kde.plasma.kickerdash");
+top.addWidget("org.kde.plasma.appmenu");
+top.addWidget("org.kde.plasma.panelspacer");
+top.addWidget("org.kde.plasma.systemtray");
+top.addWidget("org.kde.plasma.digitalclock");
+var dock = new Panel;
+dock.location = "bottom";
+dock.height = 64;
+dock.floating = true;
+dock.alignment = "center";
+dock.lengthMode = "fit";
+dock.hiding = "autohide";
+var tasks = dock.addWidget("org.kde.plasma.icontasks");
+tasks.currentConfigGroup = ["General"];
+tasks.writeConfig("launchers", ["applications:firefox-esr.desktop", "applications:org.kde.dolphin.desktop", "applications:org.kde.konsole.desktop", "applications:systemsettings.desktop", "applications:org.kde.discover.desktop"]);
+tasks.writeConfig("showOnlyCurrentDesktop", false);
+tasks.writeConfig("fill", false);

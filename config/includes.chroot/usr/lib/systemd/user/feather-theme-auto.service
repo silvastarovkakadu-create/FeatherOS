@@ -1,0 +1,5 @@
+[Unit]
+Description=Apply FeatherOS light or dark theme for local time
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/feather-theme-auto

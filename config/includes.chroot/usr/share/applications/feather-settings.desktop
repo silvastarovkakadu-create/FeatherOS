@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Settings
+Comment=Configure FeatherOS
+Exec=feather-settings
+Icon=featheros
+Categories=Settings;System;
+Keywords=appearance;theme;accent;performance;system;

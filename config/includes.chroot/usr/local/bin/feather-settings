@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+import os, subprocess, sys
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (QApplication, QCheckBox, QColorDialog, QComboBox,
+    QFrame, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QMessageBox,
+    QPushButton, QSlider, QStackedWidget, QVBoxLayout, QWidget)
+
+def run(*args):
+    return subprocess.run(args, check=False)
+
+def write(file, group, key, value):
+    run("kwriteconfig6", "--file", file, "--group", group, "--key", key, str(value))
+
+def reload_kwin():
+    run("qdbus6", "org.kde.KWin", "/KWin", "reconfigure")
+
+class Card(QFrame):
+    def __init__(self):
+        super().__init__(); self.setObjectName("card"); self.box = QVBoxLayout(self); self.box.setSpacing(14)
+
+class Settings(QWidget):
+    def __init__(self):
+        super().__init__(); self.setWindowTitle("Settings — FeatherOS"); self.resize(980, 660)
+        root = QHBoxLayout(self); root.setContentsMargins(18,18,18,18); root.setSpacing(18)
+        self.nav = QListWidget(); self.nav.setFixedWidth(220)
+        for name in ("Appearance", "Performance", "Desktop", "System", "About"):
+            QListWidgetItem(name, self.nav)
+        self.pages = QStackedWidget(); root.addWidget(self.nav); root.addWidget(self.pages, 1)
+        self.pages.addWidget(self.appearance()); self.pages.addWidget(self.performance())
+        self.pages.addWidget(self.desktop()); self.pages.addWidget(self.system()); self.pages.addWidget(self.about())
+        self.nav.currentRowChanged.connect(self.pages.setCurrentIndex); self.nav.setCurrentRow(0)
+        self.setStyleSheet("""
+          QWidget{background:#111522;color:#f2f4ff;font:11pt Inter} QListWidget{border:0;border-radius:22px;background:#171c2b;padding:10px}
+          QListWidget::item{padding:14px;border-radius:14px} QListWidget::item:selected{background:#6578e8;color:white}
+          QFrame#card{background:#1a2030;border:1px solid #30384d;border-radius:22px;padding:14px}
+          QPushButton,QComboBox{background:#293147;border:1px solid #3a4561;border-radius:13px;padding:10px 14px}
+          QPushButton:hover{background:#35405d} QSlider::groove:horizontal{height:6px;background:#343c51;border-radius:3px}
+          QSlider::handle:horizontal{background:#8293ff;width:18px;margin:-6px 0;border-radius:9px}
+        """)
+
+    def title(self, text, subtitle=""):
+        box = QWidget(); l = QVBoxLayout(box); h=QLabel(text); h.setStyleSheet("font-size:24pt;font-weight:700"); l.addWidget(h)
+        if subtitle: s=QLabel(subtitle); s.setStyleSheet("color:#aeb7d1"); s.setWordWrap(True); l.addWidget(s)
+        return box
+
+    def appearance(self):
+        p=QWidget(); l=QVBoxLayout(p); l.addWidget(self.title("Appearance", "Every control below changes a real Plasma or KWin setting."))
+        c=Card(); theme=QComboBox(); theme.addItems(["Dark", "Light", "Auto"]); theme.setCurrentText("Auto"); c.box.addWidget(QLabel("Theme")); c.box.addWidget(theme)
+        def theme_changed(name):
+            if name == "Auto": run("systemctl", "--user", "enable", "--now", "feather-theme-auto.timer"); run("feather-theme-auto")
+            else:
+                run("systemctl", "--user", "disable", "--now", "feather-theme-auto.timer")
+                run("plasma-apply-colorscheme", "Feather"+name)
+        theme.currentTextChanged.connect(theme_changed)
+        accent=QPushButton("Choose accent color…"); accent.clicked.connect(self.accent); c.box.addWidget(accent)
+        blur=QCheckBox("Enable background blur"); blur.setChecked(True); blur.toggled.connect(lambda v:(write("kwinrc","Plugins","blurEnabled",str(v).lower()), reload_kwin())); c.box.addWidget(blur)
+        c.box.addWidget(QLabel("Animation speed")); speed=QComboBox(); speed.addItems(["Off", "Fast", "Normal", "Smooth"]); speed.setCurrentText("Smooth")
+        speed.currentTextChanged.connect(lambda x:(write("kdeglobals","KDE","AnimationDurationFactor",{"Off":0,"Fast":0.5,"Normal":1.0,"Smooth":1.25}[x]), reload_kwin())); c.box.addWidget(speed)
+        l.addWidget(c); l.addStretch(); return p
+
+    def accent(self):
+        color=QColorDialog.getColor(QColor(112,132,255), self, "Accent color")
+        if color.isValid(): write("kdeglobals","General","AccentColor",f"{color.red()},{color.green()},{color.blue()}"); run("plasma-apply-colorscheme", "FeatherDark"); reload_kwin()
+
+    def performance(self):
+        p=QWidget(); l=QVBoxLayout(p); l.addWidget(self.title("Performance", "Power modes require supported laptop firmware and power-profiles-daemon.")); c=Card()
+        mode=QComboBox(); mode.addItems(["power-saver", "balanced", "performance"]); mode.setCurrentText("balanced"); mode.currentTextChanged.connect(lambda x:run("powerprofilesctl","set",x)); c.box.addWidget(QLabel("Performance profile")); c.box.addWidget(mode)
+        reduce=QCheckBox("Reduce Effects"); reduce.toggled.connect(self.reduce); c.box.addWidget(reduce); l.addWidget(c); l.addStretch(); return p
+
+    def reduce(self, on):
+        write("kwinrc","Plugins","blurEnabled",str(not on).lower()); write("kwinrc","Plugins","contrastEnabled",str(not on).lower())
+        write("kdeglobals","KDE","AnimationDurationFactor",0.5 if on else 0.8); reload_kwin()
+
+    def desktop(self):
+        p=QWidget(); l=QVBoxLayout(p); l.addWidget(self.title("Desktop", "Overview, workspaces, displays, Dock and panels are managed by Plasma.")); c=Card()
+        b=QPushButton("Open Plasma desktop settings"); b.clicked.connect(lambda:run("systemsettings")); c.box.addWidget(b); l.addWidget(c); l.addStretch(); return p
+
+    def system(self):
+        p=QWidget(); l=QVBoxLayout(p); l.addWidget(self.title("System", "Network, Bluetooth, sound, accounts, input, storage and updates.")); c=Card()
+        b=QPushButton("Open Advanced Settings"); b.clicked.connect(lambda:run("systemsettings")); c.box.addWidget(b)
+        d=QPushButton("Open Discover"); d.clicked.connect(lambda:run("plasma-discover")); c.box.addWidget(d); l.addWidget(c); l.addStretch(); return p
+
+    def about(self):
+        p=QWidget(); l=QVBoxLayout(p); l.addWidget(self.title("FeatherOS 1.0", "Codename Feather\nDebian 13 stable base • KDE Plasma 6 • Wayland\n\nA lightweight, original glass-inspired Linux desktop.")); l.addStretch(); return p
+
+app=QApplication(sys.argv); app.setApplicationName("FeatherOS Settings"); w=Settings(); w.show(); sys.exit(app.exec())

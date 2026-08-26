@@ -1,0 +1,2 @@
+# 32-bit runtime is installed by 030-gaming-runtime.hook.chroot after enabling
+# Debian's i386 foreign architecture. Steam and Wine remain opt-in.

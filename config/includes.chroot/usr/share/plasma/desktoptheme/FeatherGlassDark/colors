@@ -1,0 +1,25 @@
+[Colors:Window]
+BackgroundNormal=20,24,36
+ForegroundNormal=241,244,255
+DecorationFocus=115,135,255
+DecorationHover=135,154,255
+[Colors:View]
+BackgroundNormal=17,21,32
+ForegroundNormal=241,244,255
+DecorationFocus=115,135,255
+DecorationHover=135,154,255
+[Colors:Button]
+BackgroundNormal=38,44,62
+ForegroundNormal=245,247,255
+DecorationFocus=115,135,255
+DecorationHover=135,154,255
+[Colors:Selection]
+BackgroundNormal=103,123,240
+ForegroundNormal=255,255,255
+[Colors:Tooltip]
+BackgroundNormal=30,35,49
+ForegroundNormal=245,247,255
+[General]
+ColorScheme=FeatherDark
+Name=Feather Glass Dark
+shadeSortColumn=true

@@ -1,0 +1,6 @@
+/.build/
+/dist/*.iso
+/dist/*.sha256
+/dist/*.log
+__pycache__/
+*.py[cod]

@@ -1,0 +1,3 @@
+#!/bin/sh
+set -eu
+find binary -type f \( -name '*.cfg' -o -name '*.conf' -o -name '*.txt' \) -exec sed -i -e 's/Debian GNU\/Linux/FeatherOS/g' -e 's/Debian Live/FeatherOS/g' -e 's/Debian/FeatherOS/g' {} + 2>/dev/null || true

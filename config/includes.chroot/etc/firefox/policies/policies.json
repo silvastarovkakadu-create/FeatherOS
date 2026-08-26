@@ -1,0 +1,15 @@
+{
+  "policies": {
+    "DisableTelemetry": true,
+    "DisableFirefoxStudies": true,
+    "DisablePocket": true,
+    "HardwareAcceleration": true,
+    "Homepage": {"URL": "file:///usr/share/featheros/start/index.html", "Locked": false, "StartPage": "homepage"},
+    "Preferences": {
+      "gfx.webrender.all": {"Value": true, "Status": "default"},
+      "general.smoothScroll": {"Value": true, "Status": "default"},
+      "browser.theme.content-theme": {"Value": 0, "Status": "default"},
+      "browser.theme.toolbar-theme": {"Value": 0, "Status": "default"}
+    }
+  }
+}

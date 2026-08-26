@@ -1,0 +1,11 @@
+[General]
+ShowFullPath=false
+ShowStatusBar=FullWidth
+BrowseThroughArchives=true
+[MainWindow]
+MenuBar=Disabled
+ToolBarsMovable=Disabled
+[PreviewSettings]
+Plugins=directorythumbnail,imagethumbnail,jpegthumbnail,ffmpegthumbs
+[VersionControl]
+enabledPlugins=

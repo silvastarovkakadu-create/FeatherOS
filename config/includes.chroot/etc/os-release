@@ -1,0 +1,8 @@
+PRETTY_NAME="FeatherOS 1.0"
+NAME="FeatherOS"
+VERSION_ID="1.0"
+VERSION="1.0 (Feather)"
+VERSION_CODENAME=feather
+ID=featheros
+ID_LIKE=debian
+LOGO=featheros

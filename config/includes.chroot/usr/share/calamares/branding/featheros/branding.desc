@@ -1,0 +1,21 @@
+---
+componentName: featheros
+welcomeStyleCalamares: true
+strings:
+    productName:         FeatherOS
+    shortProductName:    FeatherOS
+    version:             1.0
+    shortVersion:        1.0
+    versionedName:       FeatherOS 1.0
+    shortVersionedName:  FeatherOS 1.0
+    bootloaderEntryName: FeatherOS
+images:
+    productLogo:         logo.png
+    productIcon:         logo.png
+    productWelcome:      welcome.png
+slideshow:               show.qml
+style:
+    sidebarBackground:   "#101522"
+    sidebarText:         "#f4f6ff"
+    sidebarTextSelect:   "#ffffff"
+    sidebarTextHighlight: "#7f91ff"

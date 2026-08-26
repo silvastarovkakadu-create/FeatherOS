@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+hour="$(date +%H)"
+if [ "$hour" -ge 7 ] && [ "$hour" -lt 19 ]; then
+  scheme=FeatherLight
+else
+  scheme=FeatherDark
+fi
+current="$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null || true)"
+[ "$current" = "$scheme" ] && exit 0
+plasma-apply-colorscheme "$scheme"
+qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true

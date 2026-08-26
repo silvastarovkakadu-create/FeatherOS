@@ -1,0 +1,33 @@
+title-text: "FeatherOS"
+title-font: "DejaVu Sans Bold 22"
+title-color: "#f3f5ffff"
+desktop-color: "#080a12"
+desktop-image: "background.png"
+terminal-font: "DejaVu Sans Mono 14"
+terminal-box: "0 0 0 0"
+terminal-left: "15%"
+terminal-top: "25%"
+terminal-width: "70%"
+terminal-height: "55%"
++ boot_menu {
+  left = 28%
+  top = 38%
+  width = 44%
+  height = 28%
+  item_font = "DejaVu Sans 16"
+  item_color = "#b9c1d9"
+  selected_item_color = "#ffffff"
+  item_height = 42
+  item_padding = 14
+  selected_item_pixmap_style = "select_*.png"
+}
++ label {
+  text = "FeatherOS 1.0 • Feather"
+  left = 0
+  top = 88%
+  width = 100%
+  align = "center"
+  color = "#8790aa"
+  font = "DejaVu Sans 12"
+}
+
