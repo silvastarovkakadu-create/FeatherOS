@@ -14,7 +14,6 @@ plasma-desktop
 plasma-workspace
 kwin-wayland
 kwin-x11
-plasma-workspace-wayland
 sddm
 sddm-theme-breeze
 kde-config-sddm
@@ -49,7 +48,7 @@ kcalc
 gwenview
 haruna
 kate
-spectacle
+kde-spectacle
 ark
 plasma-systemmonitor
 ffmpegthumbs
@@ -89,7 +88,7 @@ firmware-iwlwifi
 firmware-realtek
 firmware-brcm80211
 firmware-atheros
-virtualbox-guest-x11
+spice-vdagent
 open-vm-tools-desktop
 
 # Utilities
