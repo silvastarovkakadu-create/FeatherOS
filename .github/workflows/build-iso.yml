@@ -45,10 +45,11 @@ jobs:
       - name: Verify ISO structure
         run: |
           test -s dist/FeatherOS-1.0-x86_64.iso
-          sha256sum --check dist/FeatherOS-1.0-x86_64.iso.sha256
-          xorriso -indev dist/FeatherOS-1.0-x86_64.iso -report_el_torito as_mkisofs
+          (cd dist && sha256sum --check FeatherOS-1.0-x86_64.iso.sha256)
+          xorriso -indev dist/FeatherOS-1.0-x86_64.iso -report_el_torito plain
 
       - name: Upload FeatherOS ISO
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: FeatherOS-1.0-x86_64
