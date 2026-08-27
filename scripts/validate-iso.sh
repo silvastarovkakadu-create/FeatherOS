@@ -71,7 +71,10 @@ debug_line="$(grep 'append .*debug' "$WORK/isolinux-feather.cfg")"
 [[ "$debug_line" != *quiet* && "$debug_line" != *splash* ]]
 grep -q 'Start FeatherOS' "$WORK/grub.cfg"
 grep -q 'FeatherOS (Debug Mode)' "$WORK/grub.cfg"
-! grep -qi 'Debian GNU/Linux' "$WORK/isolinux-menu.cfg" "$WORK/grub.cfg"
+if grep -qi 'Debian GNU/Linux' "$WORK/isolinux-menu.cfg" "$WORK/grub.cfg"; then
+    echo "Debian user-facing branding found in bootloader configuration" >&2
+    exit 4
+fi
 
 echo "[6/6] ISO validation complete"
 echo "FeatherOS ISO static validation: OK"

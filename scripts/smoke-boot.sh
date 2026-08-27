@@ -12,6 +12,8 @@ LOG_DIR="${PROJECT_DIR}/logs"
 mkdir -p "$LOG_DIR"
 WORK="$(mktemp -d)"
 qemu_pid=""
+# ShellCheck cannot infer that this function is invoked through the trap below.
+# shellcheck disable=SC2317
 cleanup() {
     if [[ -n "$qemu_pid" ]]; then
         kill "$qemu_pid" 2>/dev/null || true

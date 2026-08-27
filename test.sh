@@ -14,7 +14,7 @@ trap 'rm -rf -- "$WORK"' EXIT
 qemu-img create -q -f qcow2 "$WORK/featheros-test.qcow2" 24G
 QEMU=(qemu-system-x86_64 -name FeatherOS -m 4096 -smp 4 -machine q35 -cpu host -enable-kvm -device virtio-vga-gl -display "gtk,gl=on" -device intel-hda -device hda-duplex -nic "user,model=virtio-net-pci" -boot d -cdrom "$ISO" -drive "file=$WORK/featheros-test.qcow2,if=virtio,format=qcow2" -serial "file:${PROJECT_DIR}/logs/qemu-serial.log" -no-reboot)
 if [[ ! -e /dev/kvm ]]; then
-  QEMU=(qemu-system-x86_64 -name FeatherOS -m 4096 -smp 2 -machine q35,accel=tcg -cpu max -device virtio-vga -display gtk -device intel-hda -device hda-duplex -nic "user,model=virtio-net-pci" -boot d -cdrom "$ISO" -drive "file=$WORK/featheros-test.qcow2,if=virtio,format=qcow2" -serial "file:${PROJECT_DIR}/logs/qemu-serial.log" -no-reboot)
+  QEMU=(qemu-system-x86_64 -name FeatherOS -m 4096 -smp 2 -machine "q35,accel=tcg" -cpu max -device virtio-vga -display gtk -device intel-hda -device hda-duplex -nic "user,model=virtio-net-pci" -boot d -cdrom "$ISO" -drive "file=$WORK/featheros-test.qcow2,if=virtio,format=qcow2" -serial "file:${PROJECT_DIR}/logs/qemu-serial.log" -no-reboot)
 fi
 if [[ -r /usr/share/OVMF/OVMF_CODE_4M.fd ]]; then
   VARS="$WORK/OVMF_VARS.fd"
