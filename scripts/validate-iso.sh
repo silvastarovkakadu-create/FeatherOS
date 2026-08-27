@@ -33,7 +33,7 @@ file "$WORK/vmlinuz" "$WORK/initrd.img" "$WORK/filesystem.squashfs"
 
 echo "[3/6] SquashFS metadata and root filesystem"
 unsquashfs -s "$WORK/filesystem.squashfs" | tee "$WORK/squashfs.txt"
-grep -q 'Squashfs' "$WORK/squashfs.txt"
+grep -qi 'squashfs' "$WORK/squashfs.txt"
 unsquashfs -cat "$WORK/filesystem.squashfs" etc/os-release > "$WORK/os-release"
 grep -q 'PRETTY_NAME="FeatherOS 1.0"' "$WORK/os-release"
 for path in usr/bin/systemctl usr/bin/startplasma-wayland usr/bin/sddm usr/bin/dolphin usr/bin/firefox-esr; do
