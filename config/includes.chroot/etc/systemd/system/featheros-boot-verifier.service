@@ -1,0 +1,12 @@
+[Unit]
+Description=FeatherOS CI desktop readiness verifier
+After=display-manager.service NetworkManager.service
+Wants=display-manager.service NetworkManager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/featheros-boot-verifier
+TimeoutStartSec=300
+
+[Install]
+WantedBy=graphical.target

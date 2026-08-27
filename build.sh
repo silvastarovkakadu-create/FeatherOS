@@ -31,3 +31,7 @@ install -m644 "$image" "${DIST_DIR}/${ISO_NAME}"
 (cd "$DIST_DIR" && sha256sum "$ISO_NAME" > "${ISO_NAME}.sha256")
 echo "Built: ${DIST_DIR}/${ISO_NAME}"
 
+if [[ "${FEATHEROS_BUILD_ONLY:-0}" != 1 ]]; then
+  "${PROJECT_DIR}/scripts/validate-iso.sh" "${DIST_DIR}/${ISO_NAME}"
+  "${PROJECT_DIR}/scripts/smoke-boot.sh" "${DIST_DIR}/${ISO_NAME}"
+fi

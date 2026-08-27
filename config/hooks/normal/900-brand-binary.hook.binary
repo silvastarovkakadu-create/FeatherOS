@@ -5,12 +5,13 @@ if [ -d binary/isolinux ]; then
     cp -f config/bootloaders/isolinux/isolinux.cfg binary/isolinux/isolinux.cfg
     cp -f config/bootloaders/isolinux/menu.cfg binary/isolinux/menu.cfg
     cp -f config/bootloaders/isolinux/stdmenu.cfg binary/isolinux/stdmenu.cfg
-    cp -f config/bootloaders/isolinux/live.cfg binary/isolinux/live.cfg
+    cp -f config/bootloaders/isolinux/feather.cfg binary/isolinux/feather.cfg
     cp -f config/bootloaders/isolinux/splash.png binary/isolinux/splash.png
 fi
 
 if [ -d binary/boot/grub ]; then
     cp -f config/bootloaders/grub/splash.png binary/boot/grub/splash.png
+    cp -f config/bootloaders/grub/grub.cfg binary/boot/grub/grub.cfg
 fi
 
 find binary -type f \( -name '*.cfg' -o -name '*.conf' -o -name '*.txt' \) -exec sed -i \

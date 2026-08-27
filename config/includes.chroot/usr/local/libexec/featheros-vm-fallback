@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+
+cmdline="$(cat /proc/cmdline 2>/dev/null || true)"
+case " $cmdline " in
+    *" featheros.safe_graphics=1 "*|*" featheros.ci=1 "*) ;;
+    *) exit 0 ;;
+esac
+
+install -d -m755 /etc/environment.d /etc/sddm.conf.d
+cat > /etc/environment.d/90-featheros-safe-graphics.conf <<'EOF'
+LIBGL_ALWAYS_SOFTWARE=1
+QT_QUICK_BACKEND=software
+KWIN_COMPOSE=Q
+EOF
+
+session=plasma
+if [ -e /usr/share/xsessions/plasmax11.desktop ]; then
+    session=plasmax11
+fi
+cat > /etc/sddm.conf.d/90-featheros-safe-graphics.conf <<EOF
+[General]
+DisplayServer=x11
+GreeterEnvironment=QT_QUICK_BACKEND=software,LIBGL_ALWAYS_SOFTWARE=1
+
+[Autologin]
+User=feather
+Session=$session
+Relogin=false
+EOF

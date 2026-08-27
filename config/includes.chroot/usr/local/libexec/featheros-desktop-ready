@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+grep -qw 'featheros.ci=1' /proc/cmdline || exit 0
+for _ in $(seq 1 120); do
+    if pgrep -x plasmashell >/dev/null 2>&1 && \
+       pgrep -x pipewire >/dev/null 2>&1 && \
+       pgrep -x wireplumber >/dev/null 2>&1; then
+        : > "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/featheros-desktop-ok"
+        exit 0
+    fi
+    sleep 1
+done
+logger -t featheros-ci "Plasma session readiness timeout"
+exit 1

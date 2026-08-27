@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=FeatherOS Desktop Readiness
+Exec=/usr/local/libexec/featheros-desktop-ready
+OnlyShowIn=KDE;
+NoDisplay=true
+X-KDE-autostart-phase=2

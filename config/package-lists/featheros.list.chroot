@@ -70,6 +70,7 @@ wget
 nano
 vim
 htop
+procps
 fastfetch
 fonts-inter
 fonts-firacode

@@ -1,0 +1,21 @@
+#!/bin/sh
+set -eu
+
+grep -qw 'featheros.ci=1' /proc/cmdline || exit 0
+uid="$(id -u feather)"
+marker="/run/user/$uid/featheros-desktop-ok"
+
+for _ in $(seq 1 240); do
+    if [ -e "$marker" ] && \
+       systemctl is-active --quiet sddm.service && \
+       systemctl is-active --quiet NetworkManager.service && \
+       systemctl is-active --quiet dbus.service; then
+        printf 'FEATHEROS_DESKTOP_OK sddm=active network=active plasma=active\n' > /dev/ttyS0
+        exit 0
+    fi
+    sleep 1
+done
+
+printf 'FEATHEROS_DESKTOP_FAILED\n' > /dev/ttyS0
+systemctl --failed --no-pager > /dev/ttyS0 2>&1 || true
+exit 1

@@ -21,6 +21,10 @@ render() {
 render 512 "${LOGO_DIR}/logo-512.png"
 render 256 "${OVERLAY}/usr/share/pixmaps/featheros-logo.png"
 render 192 "${OVERLAY}/usr/share/plymouth/themes/featheros/logo.png"
+convert -size 300x8 xc:none -fill '#26304a' -draw 'roundrectangle 0,0 299,7 4,4' \
+  "${OVERLAY}/usr/share/plymouth/themes/featheros/progress-track.png"
+convert -size 300x8 xc:none -fill '#7f92ff' -draw 'roundrectangle 0,0 299,7 4,4' \
+  "${OVERLAY}/usr/share/plymouth/themes/featheros/progress-fill.png"
 render 128 "${OVERLAY}/usr/share/sddm/themes/featheros/logo.png"
 render 96 "${OVERLAY}/usr/share/calamares/branding/featheros/logo.png"
 rsvg-convert -w 800 -h 450 -o "${OVERLAY}/usr/share/calamares/branding/featheros/welcome.png" "${PROJECT_DIR}/branding/wallpapers/Feather-Dark.svg"

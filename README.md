@@ -62,13 +62,18 @@ dist/build.log
 
 `make-iso.sh` runs the same build. A first build downloads several gigabytes and can take 30–120 minutes.
 
+`build.sh` does not stop after creating a file: it validates the ISO, SquashFS, kernel, initramfs and bootloader records, then boots the live system in QEMU and waits for a Plasma desktop readiness marker. Set `FEATHEROS_BUILD_ONLY=1` only in controlled CI pipelines that run the validation stages separately.
+
 ## Test
 
 ```bash
 ./test.sh
+./test-debug.sh
 ```
 
 It starts QEMU with 4 CPUs/4 GB RAM, KVM/OpenGL when available, software fallback otherwise, and OVMF UEFI when installed. An alternative ISO path can be passed as argument 1.
+
+`test-debug.sh` disables Plymouth, enables kernel/systemd debug output on `tty0` and `ttyS0`, uses `panic=0`, and writes the serial trace to `logs/qemu-debug-serial.log`. CI writes its automatic desktop test to `logs/qemu-serial.log` and fails on panic, reboot, early QEMU exit, or failure to reach Plasma.
 
 VirtualBox: choose Debian (64-bit), 4 GB RAM, 4 CPUs, VMSVGA and 128 MB video RAM. Enable EFI for the UEFI test. VMware: choose Debian 13.x 64-bit and enable 3D acceleration.
 
@@ -95,6 +100,8 @@ On Windows, use Rufus in DD mode or Balena Etcher. Verify the SHA-256 file first
 
 ## Troubleshooting
 
+- Browser v86: FeatherOS is x86_64, while v86 currently lacks 64-bit CPU extensions. It can display the ISO boot menu but resets when control passes to the amd64 kernel. Use QEMU, VirtualBox, VMware or physical x86_64 hardware; this is an emulator limitation, not a supported FeatherOS boot target.
+- Boot diagnostics: select **FeatherOS (Debug Mode)**. It shows kernel/initramfs/systemd output, mirrors it to 115200-baud COM1, disables Plymouth and stops instead of auto-rebooting after a panic.
 - Missing build tool: run the dependency installer.
 - Package not found: verify access to `deb.debian.org` and `security.debian.org`, run `sudo ./clean.sh`, then rebuild.
 - Secure Boot: 1.0 has no project-owned signed shim; disable Secure Boot for testing.

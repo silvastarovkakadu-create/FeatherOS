@@ -1,6 +1,5 @@
 #!/bin/sh
 set -eu
-systemctl enable NetworkManager.service bluetooth.service sddm.service cups.socket power-profiles-daemon.service || true
+systemctl enable NetworkManager.service bluetooth.service sddm.service cups.socket power-profiles-daemon.service featheros-vm-fallback.service featheros-boot-verifier.service || true
 systemctl --global enable pipewire.socket pipewire-pulse.socket wireplumber.service feather-theme-auto.timer || true
 systemctl disable ModemManager.service 2>/dev/null || true
-
