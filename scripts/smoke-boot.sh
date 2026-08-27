@@ -22,7 +22,7 @@ timeout 240 qemu-system-x86_64 \
 rc=$?
 set -e
 
-if grep -Eqi 'Reached target .*Multi-User|Started .*Display Manager|Welcome to FeatherOS' "$WORK/qemu.log"; then
+if grep -Eqi 'Reached target .*Multi-User|Started .*Display Manager|Welcome to FeatherOS|featheros login:' "$WORK/qemu.log"; then
     echo "QEMU live boot smoke test: OK"
     exit 0
 fi
