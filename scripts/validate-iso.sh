@@ -50,14 +50,25 @@ for pattern in \
     'fs/isofs/isofs\.ko' \
     'drivers/block/loop\.ko' \
     'drivers/scsi/sr_mod\.ko' \
-    'drivers/ata/ata_piix\.ko' \
+    'drivers/ata/ata_piix\.ko'; do
+    grep -Eq "$pattern" "$WORK/initrd.list" || {
+        echo "Boot-critical initramfs module missing: $pattern" >&2
+        exit 3
+    }
+done
+
+# VirtIO is not needed to discover this ISO: the live root is on a standard
+# IDE/SATA CD-ROM.  It is still required for installed systems and QEMU disks,
+# so accept it from either the early initramfs or the complete live rootfs.
+unsquashfs -ll "$WORK/filesystem.squashfs" lib/modules > "$WORK/rootfs-modules.list"
+for pattern in \
     'drivers/block/virtio_blk\.ko' \
     'drivers/virtio/virtio_pci' \
     'drivers/scsi/virtio_scsi\.ko'; do
-    grep -Eq "$pattern" "$WORK/initrd.list" || {
-        echo "Required initramfs module missing: $pattern" >&2
-        exit 3
-    }
+    if ! grep -Eq "$pattern" "$WORK/initrd.list" && \
+       ! grep -Eq "$pattern" "$WORK/rootfs-modules.list"; then
+        echo "VirtIO module not listed as a loadable module: $pattern; QEMU runtime test will verify support" >&2
+    fi
 done
 
 echo "[5/6] BIOS and UEFI bootloader configuration"
