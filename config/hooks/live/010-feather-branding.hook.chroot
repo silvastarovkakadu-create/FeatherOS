@@ -6,9 +6,23 @@ ln -sf /usr/share/wallpapers/FeatherOS/Feather-Dark.svg /usr/share/backgrounds/f
 update-alternatives --install /usr/share/desktop-base/active-theme/wallpaper/contents/images/1920x1080.svg desktop-background /usr/share/wallpapers/FeatherOS/Feather-Dark.svg 100 || true
 plymouth-set-default-theme featheros || true
 update-initramfs -u
-sed -i 's/^Name=.*/Name=Files/' /usr/share/applications/org.kde.dolphin.desktop
-sed -i 's/^Name=.*/Name=Terminal/' /usr/share/applications/org.kde.konsole.desktop
-sed -i 's/^Name=.*/Name=Advanced Settings/' /usr/share/applications/systemsettings.desktop
-sed -i 's/^Name=.*/Name=Install FeatherOS/' /usr/share/applications/calamares.desktop
-sed -i 's/^branding:.*/branding: featheros/' /etc/calamares/settings.conf
+
+rename_desktop() {
+    desktop_file="$1"
+    desktop_name="$2"
+    if [ -f "$desktop_file" ]; then
+        sed -i "s/^Name=.*/Name=${desktop_name}/" "$desktop_file"
+    fi
+}
+
+rename_desktop /usr/share/applications/org.kde.dolphin.desktop Files
+rename_desktop /usr/share/applications/org.kde.konsole.desktop Terminal
+rename_desktop /usr/share/applications/systemsettings.desktop "Advanced Settings"
+for desktop_file in /usr/share/applications/*calamares*.desktop; do
+    [ -f "$desktop_file" ] || continue
+    sed -i 's/^Name=.*/Name=Install FeatherOS/' "$desktop_file"
+done
+if [ -f /etc/calamares/settings.conf ]; then
+    sed -i 's/^branding:.*/branding: featheros/' /etc/calamares/settings.conf
+fi
 update-icon-caches /usr/share/icons/hicolor || true

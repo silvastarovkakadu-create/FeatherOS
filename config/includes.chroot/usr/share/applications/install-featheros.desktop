@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Install FeatherOS
+GenericName=System Installer
+Comment=Install FeatherOS on this computer
+Exec=pkexec calamares
+Icon=featheros
+Terminal=false
+Categories=System;
+Keywords=install;installer;system;
