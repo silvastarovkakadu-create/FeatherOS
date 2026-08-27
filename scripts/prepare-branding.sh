@@ -36,3 +36,18 @@ convert -size 64x42 xc:none -fill '#55718dcc' -stroke '#80a0ffff' -strokewidth 1
 cp "${OVERLAY}/boot/grub/themes/featheros/select_c.png" "${OVERLAY}/boot/grub/themes/featheros/select_n.png"
 cp "${OVERLAY}/boot/grub/themes/featheros/select_c.png" "${OVERLAY}/boot/grub/themes/featheros/select_s.png"
 cp "${OVERLAY}/boot/grub/themes/featheros/select_c.png" "${OVERLAY}/boot/grub/themes/featheros/select_e.png"
+
+# Live ISO boot menus are outside the chroot and need separate raster assets.
+BOOT_ISOLINUX="${PROJECT_DIR}/config/bootloaders/isolinux"
+BOOT_GRUB="${PROJECT_DIR}/config/bootloaders/grub"
+mkdir -p "$BOOT_ISOLINUX" "$BOOT_GRUB"
+convert "${PROJECT_DIR}/branding/wallpapers/Feather-Dark.svg" \
+  -resize '640x480^' -gravity center -extent 640x480 \
+  "$BOOT_ISOLINUX/splash.png"
+convert "$BOOT_ISOLINUX/splash.png" \( "$SOURCE" -resize 112x112 \) \
+  -gravity north -geometry +0+34 -composite PNG8:"$BOOT_ISOLINUX/splash.png"
+convert "${PROJECT_DIR}/branding/wallpapers/Feather-Dark.svg" \
+  -resize '800x600^' -gravity center -extent 800x600 \
+  "$BOOT_GRUB/splash.png"
+convert "$BOOT_GRUB/splash.png" \( "$SOURCE" -resize 144x144 \) \
+  -gravity north -geometry +0+42 -composite "$BOOT_GRUB/splash.png"

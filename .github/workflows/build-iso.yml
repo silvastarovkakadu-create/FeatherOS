@@ -48,6 +48,9 @@ jobs:
           (cd dist && sha256sum --check FeatherOS-1.0-x86_64.iso.sha256)
           xorriso -indev dist/FeatherOS-1.0-x86_64.iso -report_el_torito plain
 
+      - name: Smoke-test FeatherOS live boot
+        run: ./scripts/smoke-boot.sh dist/FeatherOS-1.0-x86_64.iso
+
       - name: Upload FeatherOS ISO
         if: always()
         uses: actions/upload-artifact@v4
