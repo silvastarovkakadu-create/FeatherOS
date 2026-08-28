@@ -12,7 +12,28 @@ WORK="$(mktemp -d)"
 trap 'rm -rf -- "$WORK"' EXIT
 
 extract() {
-    xorriso -osirrox on -indev "$ISO" -extract "$1" "$2" >/dev/null 2>&1
+    local iso_path="$1"
+    local output_path="$2"
+    if ! xorriso -osirrox on -indev "$ISO" -extract "$iso_path" "$output_path" >/dev/null 2>&1; then
+        echo "Required ISO path missing or unreadable: $iso_path" >&2
+        exit 5
+    fi
+    if [[ ! -s "$output_path" ]]; then
+        echo "Extracted ISO file is empty: $iso_path" >&2
+        exit 5
+    fi
+}
+
+require_text() {
+    local pattern="$1"
+    local path="$2"
+    local description="$3"
+    if ! grep -Fq -- "$pattern" "$path"; then
+        echo "Bootloader validation failed: $description ($pattern in $path)" >&2
+        echo "----- $path -----" >&2
+        sed -n '1,160p' "$path" >&2
+        exit 6
+    fi
 }
 
 echo "[1/6] ISO9660 and El Torito records"
@@ -75,13 +96,16 @@ echo "[5/6] BIOS and UEFI bootloader configuration"
 extract /isolinux/menu.cfg "$WORK/isolinux-menu.cfg"
 extract /isolinux/feather.cfg "$WORK/isolinux-feather.cfg"
 extract /boot/grub/grub.cfg "$WORK/grub.cfg"
-grep -q 'Start FeatherOS' "$WORK/isolinux-feather.cfg"
-grep -q 'Debug Mode' "$WORK/isolinux-feather.cfg"
-grep -q 'console=tty0 console=ttyS0,115200' "$WORK/isolinux-feather.cfg"
+require_text 'Start FeatherOS' "$WORK/isolinux-feather.cfg" 'BIOS normal entry missing'
+require_text 'Debug Mode' "$WORK/isolinux-feather.cfg" 'BIOS debug entry missing'
+require_text 'console=tty0 console=ttyS0,115200' "$WORK/isolinux-feather.cfg" 'BIOS serial console missing'
 debug_line="$(grep 'append .*debug' "$WORK/isolinux-feather.cfg")"
-[[ "$debug_line" != *quiet* && "$debug_line" != *splash* ]]
-grep -q 'Start FeatherOS' "$WORK/grub.cfg"
-grep -q 'FeatherOS (Debug Mode)' "$WORK/grub.cfg"
+if [[ "$debug_line" == *quiet* || "$debug_line" == *splash* ]]; then
+    echo "BIOS Debug Mode still contains quiet/splash: $debug_line" >&2
+    exit 6
+fi
+require_text 'Start FeatherOS' "$WORK/grub.cfg" 'UEFI normal entry missing'
+require_text 'FeatherOS (Debug Mode)' "$WORK/grub.cfg" 'UEFI debug entry missing'
 if grep -qi 'Debian GNU/Linux' "$WORK/isolinux-menu.cfg" "$WORK/grub.cfg"; then
     echo "Debian user-facing branding found in bootloader configuration" >&2
     exit 4
