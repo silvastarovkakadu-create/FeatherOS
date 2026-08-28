@@ -9,11 +9,6 @@ if [ -d binary/isolinux ]; then
     cp -f config/bootloaders/isolinux/splash.png binary/isolinux/splash.png
 fi
 
-if [ -d binary/boot/grub ]; then
-    cp -f config/bootloaders/grub/splash.png binary/boot/grub/splash.png
-    cp -f config/bootloaders/grub/grub.cfg binary/boot/grub/grub.cfg
-fi
-
 find binary -type f \( -name '*.cfg' -o -name '*.conf' -o -name '*.txt' \) -exec sed -i \
     -e 's/Debian GNU\/Linux/FeatherOS/g' \
     -e 's/Debian Live/FeatherOS/g' \
