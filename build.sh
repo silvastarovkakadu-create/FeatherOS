@@ -23,7 +23,13 @@ install -Dm755 "${PROJECT_DIR}/config/auto/clean" "${BUILD_DIR}/auto/clean"
 cd "$BUILD_DIR"
 lb clean --purge || true
 ./auto/config
-lb build 2>&1 | tee "${DIST_DIR}/build.log"
+
+if ! lb build 2>&1 | tee "${DIST_DIR}/build.log"; then
+  status=${PIPESTATUS[0]}
+  echo "live-build failed with exit code ${status}" >&2
+  tail -n 100 "${DIST_DIR}/build.log" >&2
+  exit "$status"
+fi
 
 image="$(find . -maxdepth 1 -type f \( -name '*.hybrid.iso' -o -name '*.iso' \) -print -quit)"
 [[ -n "$image" ]] || { echo "live-build finished without an ISO" >&2; exit 3; }
