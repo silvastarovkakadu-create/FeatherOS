@@ -1,9 +1,14 @@
 #!/bin/sh
 set -eu
-install -d /usr/share/wallpapers/FeatherOS /usr/share/backgrounds/featheros
+
+install -d \
+  /usr/share/wallpapers/FeatherOS \
+  /usr/share/backgrounds/featheros \
+  /usr/share/desktop-base/active-theme/wallpaper/contents/images
+
 cp -a /usr/share/featheros/wallpapers/. /usr/share/wallpapers/FeatherOS/
 ln -sf /usr/share/wallpapers/FeatherOS/Feather-Dark.svg /usr/share/backgrounds/featheros/default.svg
-update-alternatives --install /usr/share/desktop-base/active-theme/wallpaper/contents/images/1920x1080.svg desktop-background /usr/share/wallpapers/FeatherOS/Feather-Dark.svg 100 || true
+update-alternatives --install /usr/share/desktop-base/active-theme/wallpaper/contents/images/1920x1080.svg desktop-background /usr/share/wallpapers/FeatherOS/Feather-Dark.svg 100
 plymouth-set-default-theme featheros || true
 update-initramfs -u
 
