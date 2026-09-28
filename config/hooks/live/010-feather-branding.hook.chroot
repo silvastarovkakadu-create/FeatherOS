@@ -1,12 +1,19 @@
 #!/bin/sh
 set -eu
 
+# Create required directories
 install -d \
   /usr/share/wallpapers/FeatherOS \
   /usr/share/backgrounds/featheros \
   /usr/share/desktop-base/active-theme/wallpaper/contents/images
 
-cp -a /usr/share/featheros/wallpapers/. /usr/share/wallpapers/FeatherOS/
+# Copy wallpapers if source exists
+if [ -d "/usr/share/featheros/wallpapers" ]; then
+    cp -a /usr/share/featheros/wallpapers/. /usr/share/wallpapers/FeatherOS/
+else
+    echo "Warning: Source wallpaper directory not found at /usr/share/featheros/wallpapers"
+fi
+
 ln -sf /usr/share/wallpapers/FeatherOS/Feather-Dark.svg /usr/share/backgrounds/featheros/default.svg
 update-alternatives --install /usr/share/desktop-base/active-theme/wallpaper/contents/images/1920x1080.svg desktop-background /usr/share/wallpapers/FeatherOS/Feather-Dark.svg 100
 plymouth-set-default-theme featheros || true
