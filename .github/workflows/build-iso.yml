@@ -10,6 +10,7 @@ permissions:
 
 concurrency:
   group: featheros-iso-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
